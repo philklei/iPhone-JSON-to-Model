@@ -1,0 +1,65 @@
+How to use:
+
+This is a simple class to parse JSON Webservice Data to Object Model with iOS.
+
+1. Create your database entities and their attributes (singular).
+
+Example:
+Database Table 	--> iOS Model
+
+projects 		--> project
+participants	--> participant
+
+Database Colmumns Mapping 
+
+Database 	--> iOS Type
+varchar 	--> NSString
+int			--> NSNumber
+boolean,bit	--> NSNumber
+text		--> NSString
+date		--> NSDate
+datetime	--> NSDate
+
+2. How to parse data to model
+First you have to download SBJSON Framework to parse to JSON Data into NSDictionary
+https://github.com/stig/json-framework
+
+The next function parse webservice response to object models
+
++(NSMutableArray *) getAllProjects {
+    
+    id response = [self objectWithUrl:[NSURL URLWithString:@"http://yourhost.de/projects.json"]];
+	
+	NSDictionary *obj = (NSDictionary *)response;
+	NSMutableArray *projects = [[NSMutableArray alloc] init];
+	
+	for (NSDictionary *data in obj)
+	{
+		Project *project = [[Project alloc] init];
+		[project initWithDictionary: data];
+		[projects addObject:project];
+		[project release];
+	}
+	return [projects autorelease];
+
+}
+
+Now you can access tour model like this:
+
+Projec *firstProject = [projects objectAtIndex:0];
+NSLog(@"Project-Name: %@", firstProject.name);
+NSLog(@"Project-Description: %@", firstProject.description);
+
+Iterate through the participants
+
+for (Participant *participant in firstProject.participants) {
+	NSLog(@"Participant-Name: %@", participant.name);
+	// ... and so on
+}
+
+
+
+
+
+
+
